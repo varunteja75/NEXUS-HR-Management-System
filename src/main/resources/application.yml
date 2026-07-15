@@ -1,0 +1,13 @@
+spring:
+  application.name: nexushr
+  datasource:
+    url: jdbc:h2:mem:nexushr;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate.ddl-auto: create-drop
+    open-in-view: false
+  h2.console.enabled: true
+server:
+  port: 8081
+  error:
+    include-message: always

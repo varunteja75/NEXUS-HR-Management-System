@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>NexusHR | Workforce Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <aside>
+    <div class="brand">
+      <span class="brandmark">N</span>
+      <span>Nexus<span>HR</span></span>
+      <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Theme">☀</button>
+    </div>
+    
+    <!-- Portal Switcher -->
+    <div class="workspace-portal">
+      <label for="portalSelect">Portal Access</label>
+      <div class="select-wrapper">
+        <select id="portalSelect" aria-label="Select Portal View">
+          <option value="admin">Admin Portal</option>
+          <!-- Dynamic employees populated via JS -->
+        </select>
+        <span class="select-arrow">▼</span>
+      </div>
+    </div>
+
+    <!-- Navigation links for Admin -->
+    <nav id="adminNav">
+      <a class="nav-link active" data-tab="overview" href="#overview"><i>▦</i>Overview</a>
+      <a class="nav-link" data-tab="people" href="#people"><i>♙</i>People Directory</a>
+      <a class="nav-link" data-tab="leaves" href="#leaves"><i>□</i>Leave Requests <b id="leaveBadge" class="badge">0</b></a>
+      <a class="nav-link" data-tab="attendance" href="#attendance"><i>◷</i>Attendance Logs</a>
+      <a class="nav-link" data-tab="payroll" href="#payroll"><i>₹</i>Payroll Overview</a>
+      <a class="nav-link" data-tab="ai-assistant" href="#ai-assistant"><i>✦</i>Nexus AI Chat</a>
+    </nav>
+
+    <!-- Navigation links for Employee -->
+    <nav id="employeeNav" style="display: none;">
+      <a class="nav-link active" data-tab="emp-overview" href="#emp-overview"><i>▦</i>My Dashboard</a>
+      <a class="nav-link" data-tab="emp-leaves" href="#emp-leaves"><i>□</i>My Leaves</a>
+      <a class="nav-link" data-tab="emp-profile" href="#emp-profile"><i>♙</i>My Profile</a>
+      <a class="nav-link" data-tab="ai-assistant" href="#ai-assistant"><i>✦</i>Nexus AI Chat</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="person" id="activeUserCard">
+        <div class="avatar violet" id="activeUserAvatar">SM</div>
+        <div>
+          <strong id="activeUserName">Saanvi Menon</strong>
+          <small id="activeUserRole">HR Administrator</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main View Area -->
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow" id="todayDate">TODAY</p>
+        <h1 id="welcomeGreeting">Good morning, Saanvi <span>✦</span></h1>
+        <p class="sub" id="welcomeSubtitle">Here’s what’s happening across your workforce.</p>
+      </div>
+      <div class="header-actions">
+        <button id="addEmployeeBtn" class="primary">+ Add Employee</button>
+        <div id="employeeClockBtnWrap" style="display: none;">
+          <button id="clockInQuickBtn" class="clock-in-btn green-btn">Quick Clock In</button>
+          <button id="clockOutQuickBtn" class="clock-out-btn red-btn" style="display: none;">Clock Out</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ADMIN PORTAL -->
+    <div id="adminPortal" class="portal-content">
+      
+      <!-- Admin Overview Tab -->
+      <section id="tab-overview" class="tab-pane active">
+        <!-- KPIs -->
+        <div class="kpis">
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon blue">♙</span>
+            </div>
+            <strong id="totalEmployees">—</strong>
+            <p>Total Employees</p>
+            <small>Workforce headcount</small>
+          </article>
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon green">◉</span>
+            </div>
+            <strong id="activeEmployees">—</strong>
+            <p>Active Status</p>
+            <small>Employees active today</small>
+          </article>
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon amber">◷</span>
+            </div>
+            <strong id="attendanceRate">—</strong>
+            <p>Attendance Rate</p>
+            <small>Checked-in percentage</small>
+          </article>
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon purple">♡</span>
+            </div>
+            <strong id="engagementScore">—</strong>
+            <p>Engagement Score</p>
+            <small>Workforce satisfaction</small>
+          </article>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="grid-main">
+          <!-- Headcount Chart -->
+          <article class="panel headcount">
+            <div class="panel-head">
+              <div>
+                <h2>Workforce Overview</h2>
+                <p>Headcount trend over the last 6 months</p>
+              </div>
+              <button class="select">Last 6 months ⌄</button>
+            </div>
+            <div class="legend">
+              <span><i class="swatch blue-s"></i>Total headcount</span>
+              <span><i class="swatch purple-s"></i>New hires</span>
+            </div>
+            <div class="chart">
+              <div class="y-axis">
+                <span>240</span><span>180</span><span>120</span><span>60</span><span>0</span>
+              </div>
+              <svg viewBox="0 0 650 210" preserveAspectRatio="none" aria-label="Headcount line chart">
+                <defs>
+                  <linearGradient id="fill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#5b61f6" stop-opacity=".24"/>
+                    <stop offset="1" stop-color="#5b61f6" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path class="gridline" d="M0 10H650M0 60H650M0 110H650M0 160H650M0 205H650"/>
+                <path d="M0 159 C60 150,75 145,125 143 S190 132,220 132 S280 120,320 122 S385 106,425 108 S485 85,525 91 S585 59,650 52 L650 205 L0 205Z" fill="url(#fill)"/>
+                <path d="M0 159 C60 150,75 145,125 143 S190 132,220 132 S280 120,320 122 S385 106,425 108 S485 85,525 91 S585 59,650 52" class="line-blue"/>
+                <path d="M0 190 L125 180 L220 188 L320 172 L425 178 L525 153 L650 165" class="line-purple"/>
+                <circle cx="650" cy="52" r="5" fill="#5b61f6"/>
+                <circle cx="650" cy="165" r="5" fill="#9b6cf5"/>
+              </svg>
+              <div class="x-axis">
+                <span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Today's Attendance -->
+          <article class="panel attendance">
+            <div class="panel-head">
+              <div>
+                <h2>Today's Attendance</h2>
+                <p>Live workforce status</p>
+              </div>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut">
+                <div>
+                  <strong id="attendanceRate2">—</strong>
+                  <small>Checked In</small>
+                </div>
+              </div>
+              <div class="att-list">
+                <p><span class="mini green-dot"></span><b id="presentCount">—</b> In Office</p>
+                <p><span class="mini purple-dot"></span><b id="remoteCount">—</b> Remote</p>
+                <p><span class="mini amber-dot"></span><b id="leaveCount">—</b> On Leave</p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Lists Grid -->
+        <div class="grid-bottom">
+          <!-- AI signals & Actions -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <article class="panel risk">
+              <div class="panel-head">
+                <div>
+                  <h2>AI Talent Signals</h2>
+                  <p>Employees needing attention</p>
+                </div>
+                <span class="ai-tag">✦ AI-powered</span>
+              </div>
+              <div id="riskEmployees" class="risk-list"></div>
+            </article>
+            
+            <article class="panel risk-actions" id="aiRecommendationsPanel">
+              <div class="panel-head">
+                <div>
+                  <h2>AI Attrition Actions</h2>
+                  <p>Retention steps recommended by system</p>
+                </div>
+              </div>
+              <div id="aiRecommendationsList" class="risk-list">
+                <!-- Dynamically populated recommendations -->
+              </div>
+            </article>
+          </div>
+
+          <!-- Pending Leaves -->
+          <article class="panel leaves">
+            <div class="panel-head">
+              <div>
+                <h2>Pending Leave Requests</h2>
+                <p>Requires your review</p>
+              </div>
+            </div>
+            <div id="leaveRequests" class="leave-list"></div>
+          </article>
+
+          <!-- Departments -->
+          <article class="panel department">
+            <div class="panel-head">
+              <div>
+                <h2>Department Mix</h2>
+                <p>Distribution by team</p>
+              </div>
+            </div>
+            <div id="departments" class="dept-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Admin People Directory Tab -->
+      <section id="tab-people" class="tab-pane">
+        <article class="panel full-width">
+          <div class="panel-head border-bottom">
+            <div>
+              <h2>Workforce Directory</h2>
+              <p>Manage employee records, roles, and profiles</p>
+            </div>
+            <div class="table-actions">
+              <input type="text" id="directorySearch" placeholder="Search employees by name, title, or team..." class="search-input">
+              <button id="exportDirectoryCsvBtn" class="btn-secondary">↓ Export CSV</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="directoryTable">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Department</th>
+                  <th>Designation</th>
+                  <th>Salary (Annual)</th>
+                  <th>Satisfaction</th>
+                  <th>Attrition Risk</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="directoryTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <!-- Admin Leave Management Tab -->
+      <section id="tab-leaves" class="tab-pane">
+        <article class="panel full-width">
+          <div class="panel-head border-bottom">
+            <div>
+              <h2>Leave Requests</h2>
+              <p>Track, approve, or reject employee leave requests</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Leave Type</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Duration</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="allLeavesTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <!-- Admin Attendance Logs Tab -->
+      <section id="tab-attendance" class="tab-pane">
+        <article class="panel full-width">
+          <div class="panel-head border-bottom">
+            <div>
+              <h2>Attendance Log</h2>
+              <p>Real-time updates on who is checked in today</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Department</th>
+                  <th>Check-In Status</th>
+                  <th>Mode</th>
+                  <th>Checked In At</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceLogsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <!-- Admin Payroll Overview Tab -->
+      <section id="tab-payroll" class="tab-pane">
+        <div class="kpis payroll-kpis">
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon blue">₹</span>
+            </div>
+            <strong id="payrollAnnualCost">—</strong>
+            <p>Annual Payroll Cost</p>
+            <small>Total salaries</small>
+          </article>
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon green">₹</span>
+            </div>
+            <strong id="payrollAvgSalary">—</strong>
+            <p>Average Salary</p>
+            <small>Per employee</small>
+          </article>
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon amber">₹</span>
+            </div>
+            <strong id="payrollMaxSalary">—</strong>
+            <p>Highest Compensation</p>
+            <small>Top earner salary</small>
+          </article>
+        </div>
+        <article class="panel full-width">
+          <div class="panel-head border-bottom">
+            <div>
+              <h2>Salary Roster</h2>
+              <p>Compensation records by employee</p>
+            </div>
+            <div class="table-actions">
+              <button id="exportPayrollCsvBtn" class="btn-secondary">↓ Export CSV</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Department</th>
+                  <th>Title</th>
+                  <th>Annual Salary</th>
+                </tr>
+              </thead>
+              <tbody id="payrollTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+    </div>
+
+    <!-- EMPLOYEE PORTAL -->
+    <div id="employeePortal" class="portal-content" style="display: none;">
+      
+      <!-- Employee Overview Tab -->
+      <section id="tab-emp-overview" class="tab-pane active">
+        <!-- Personal KPIs -->
+        <div class="kpis">
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon blue">□</span>
+            </div>
+            <strong id="empLeaveBalance">—</strong>
+            <p>Leave Balance</p>
+            <small>Days remaining</small>
+          </article>
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon green">◉</span>
+            </div>
+            <strong id="empClockStatus">Checked Out</strong>
+            <p>Work Status</p>
+            <small id="empClockDetails">Not active</small>
+          </article>
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon purple">♡</span>
+            </div>
+            <strong id="empEngagement">—</strong>
+            <p>My Engagement Score</p>
+            <small>Last feedback check-in</small>
+          </article>
+          <article>
+            <div class="kpi-top">
+              <span class="kpi-icon amber">↗</span>
+            </div>
+            <strong id="empAttritionRisk">—</strong>
+            <p>My Attrition Risk</p>
+            <small>System calculation</small>
+          </article>
+        </div>
+
+        <div class="grid-main">
+          <!-- Clock In/Out Control -->
+          <article class="panel clock-control-panel">
+            <div class="panel-head">
+              <div>
+                <h2>Clock-In Portal</h2>
+                <p>Register your presence for today</p>
+              </div>
+            </div>
+            <div class="clock-action-container">
+              <div class="clock-display" id="liveTime">00:00:00</div>
+              
+              <div id="clockOutSection" style="display: none;" class="clock-status-box success">
+                <p>You clocked in at <strong id="clockInTimeSpan">09:00 AM</strong> (<span id="clockModeSpan">Office</span>)</p>
+                <button id="clockOutBtn" class="clock-btn clock-out">Clock Out</button>
+              </div>
+
+              <div id="clockInSection" class="clock-status-box">
+                <p>Select your work mode to check-in:</p>
+                <div class="mode-selector">
+                  <label class="radio-label">
+                    <input type="radio" name="clockMode" value="OFFICE" checked>
+                    <span class="radio-custom"></span> Office
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="clockMode" value="REMOTE">
+                    <span class="radio-custom"></span> Remote
+                  </label>
+                </div>
+                <button id="clockInBtn" class="clock-btn clock-in">Clock In</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- My Team Members -->
+          <article class="panel team-members-panel">
+            <div class="panel-head">
+              <div>
+                <h2>My Team</h2>
+                <p>Members in your department</p>
+              </div>
+            </div>
+            <div id="teamMembersList" class="risk-list">
+              <!-- Dynamically populated -->
+            </div>
+          </article>
+
+          <!-- Clock logs history -->
+          <article class="panel emp-clock-history-panel" style="grid-column: span 2;">
+            <div class="panel-head border-bottom">
+              <div>
+                <h2>Clock History Logs</h2>
+                <p>Track your check-in/out timestamps and modes</p>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table small-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Check In Time</th>
+                    <th>Check Out Time</th>
+                    <th>Work Mode</th>
+                    <th>Duration</th>
+                  </tr>
+                </thead>
+                <tbody id="empClockHistoryBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Employee Leaves Tab -->
+      <section id="tab-emp-leaves" class="tab-pane">
+        <div class="grid-main">
+          <!-- Leave Request Form -->
+          <article class="panel apply-leave-panel">
+            <div class="panel-head border-bottom">
+              <div>
+                <h2>Request Leave</h2>
+                <p>Submit a new leave request for review</p>
+              </div>
+            </div>
+            <form id="applyLeaveForm" class="styled-form">
+              <div class="form-group">
+                <label for="leaveType">Leave Type</label>
+                <select id="leaveType" required>
+                  <option value="Casual Leave">Casual Leave</option>
+                  <option value="Sick Leave">Sick Leave</option>
+                  <option value="Annual Leave">Annual Leave</option>
+                  <option value="Maternity/Paternity Leave">Maternity/Paternity Leave</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="leaveStart">Start Date</label>
+                <input type="date" id="leaveStart" required>
+              </div>
+              <div class="form-group">
+                <label for="leaveEnd">End Date</label>
+                <input type="date" id="leaveEnd" required>
+              </div>
+              <div class="form-group">
+                <label for="leaveReason">Specific Reason</label>
+                <textarea id="leaveReason" rows="3" placeholder="E.g. Medical emergency, urgent personal work..." required style="resize: none; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--font-main); font-size: 13px; outline: none;"></textarea>
+              </div>
+              <div class="form-group" id="leaveDurationAlertWrap" style="display: none; margin-bottom: 16px;">
+                <span id="leaveDurationText" style="font-weight: 700; color: var(--blue); font-size: 13px;"></span>
+                <span id="leaveBalanceWarningText" style="font-weight: 700; color: var(--red); display: none; font-size: 12px; margin-top: 4px;"></span>
+              </div>
+              <button type="submit" class="primary full-width">Submit Request</button>
+            </form>
+          </article>
+
+          <!-- My Leave History -->
+          <article class="panel leave-history-panel">
+            <div class="panel-head border-bottom">
+              <div>
+                <h2>My Leave History</h2>
+                <p>Status of your requests</p>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table small-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Dates</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="empLeavesTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Employee Profile Tab -->
+      <section id="tab-emp-profile" class="tab-pane">
+        <article class="panel profile-card-panel">
+          <div class="profile-header-banner"></div>
+          <div class="profile-card-body">
+            <div class="profile-avatar-large" id="profileAvatarLarge">AM</div>
+            <h2 id="profileName" class="profile-name">Employee Name</h2>
+            <p id="profileTitle" class="profile-title">Designation</p>
+            
+            <hr class="profile-divider">
+            
+            <div class="profile-details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Email Address</span>
+                <span class="detail-value" id="profileEmail">employee@nexushr.demo</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Department</span>
+                <span class="detail-value" id="profileDepartment">Engineering</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Join Date</span>
+                <span class="detail-value" id="profileJoinDate">January 1, 2024</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Compensation</span>
+                <div class="salary-value-wrapper">
+                  <span class="detail-value blurred" id="profileSalary">₹0,00,000</span>
+                  <button id="toggleSalaryBtn" class="toggle-salary-btn">Show</button>
+                </div>
+              </div>
+              <div class="detail-item full-width" style="grid-column: span 2;">
+                <span class="detail-label">Bio Description</span>
+                <span class="detail-value" id="profileBioText" style="font-weight: 400; line-height: 1.5; color: var(--muted); font-size: 13px;">—</span>
+              </div>
+              <div class="detail-item full-width" style="grid-column: span 2;">
+                <span class="detail-label">Skills & Certifications</span>
+                <div id="profileSkillsTags" class="skills-tags-wrap" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
+                  <!-- Dynamically tags -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+    </div>
+
+    <!-- SHARED AI ASSISTANT PORTAL -->
+    <div id="aiAssistantPortal" class="portal-content" style="display: none;">
+      <section id="tab-ai-assistant" class="tab-pane active">
+        <article class="panel ai-chat-panel">
+          <div class="panel-head border-bottom">
+            <div>
+              <h2>Nexus AI Assistant</h2>
+              <p>Ask questions about leaves, attendance, payroll, or individual employee records</p>
+            </div>
+            <span class="ai-tag">✦ Active Agent</span>
+          </div>
+          <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+              <div class="chat-message bot">
+                <div class="chat-bubble">
+                  Hello! I am Nexus AI. I have full access to your workforce data. How can I help you today?
+                </div>
+              </div>
+            </div>
+            
+            <!-- Suggested Prompts -->
+            <div class="chat-suggestions" id="chatSuggestions">
+              <button class="suggestion-chip">Who is remote today?</button>
+              <button class="suggestion-chip">What is our total payroll cost?</button>
+              <button class="suggestion-chip">Show pending leave requests</button>
+              <button class="suggestion-chip">Summarize workforce health</button>
+            </div>
+
+            <form id="chatForm" class="chat-input-area">
+              <input type="text" id="chatInput" placeholder="Ask Nexus AI..." required autocomplete="off">
+              <button type="submit" class="primary">Send</button>
+            </form>
+          </div>
+        </article>
+      </section>
+    </div>
+
+    <footer>© 2026 NexusHR • Workforce Intelligence, Thoughtfully Built.</footer>
+  </main>
+
+  <!-- MODAL: ADD / EDIT EMPLOYEE -->
+  <div id="employeeModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Employee</h2>
+        <button class="close-modal" id="closeEmployeeModalBtn">&times;</button>
+      </div>
+      <form id="employeeForm" class="styled-form">
+        <input type="hidden" id="editEmployeeId">
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="empFormName">Full Name</label>
+            <input type="text" id="empFormName" required placeholder="E.g. Aarav Mehta">
+          </div>
+          <div class="form-group">
+            <label for="empFormEmail">Email Address</label>
+            <input type="email" id="empFormEmail" required placeholder="E.g. name@nexushr.demo">
+          </div>
+          <div class="form-group">
+            <label for="empFormDept">Department</label>
+            <select id="empFormDept" required>
+              <option value="Engineering">Engineering</option>
+              <option value="People Operations">People Operations</option>
+              <option value="Finance">Finance</option>
+              <option value="Sales">Sales</option>
+              <option value="Design">Design</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="empFormTitle">Job Title</label>
+            <input type="text" id="empFormTitle" required placeholder="E.g. Senior Software Engineer">
+          </div>
+          <div class="form-group">
+            <label for="empFormStatus">Status</label>
+            <select id="empFormStatus" required>
+              <option value="ACTIVE">Active</option>
+              <option value="ON_LEAVE">On Leave</option>
+              <option value="INACTIVE">Inactive</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="empFormSalary">Annual Salary (INR)</label>
+            <input type="number" id="empFormSalary" required min="0" placeholder="E.g. 1200000">
+          </div>
+          <div class="form-group">
+            <label for="empFormLeave">Leave Balance (Days)</label>
+            <input type="number" id="empFormLeave" required min="0" placeholder="E.g. 15">
+          </div>
+          <div class="form-group">
+            <label for="empFormEngagement">Engagement Score (0-100)</label>
+            <input type="number" id="empFormEngagement" required min="0" max="100" placeholder="E.g. 85">
+          </div>
+          <div class="form-group">
+            <label for="empFormRisk">Attrition Risk (0-100)</label>
+            <input type="number" id="empFormRisk" required min="0" max="100" placeholder="E.g. 15">
+          </div>
+          <div class="form-group full-width" style="grid-column: span 2;">
+            <label for="empFormSkills">Skills & Certifications (Comma-separated)</label>
+            <input type="text" id="empFormSkills" placeholder="E.g. Java, Spring Boot, React, SQL">
+          </div>
+          <div class="form-group full-width" style="grid-column: span 2;">
+            <label for="empFormBio">Bio Description</label>
+            <textarea id="empFormBio" rows="3" placeholder="E.g. Passionate software engineer with 5 years experience..." style="resize: none; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--font-main); font-size: 13px; outline: none;"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelEmployeeModalBtn">Cancel</button>
+          <button type="submit" class="primary" id="saveEmployeeBtn">Save Employee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
