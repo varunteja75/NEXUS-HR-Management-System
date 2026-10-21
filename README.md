@@ -132,4 +132,8 @@ These are proposed enhancements and are not claimed as implemented features of t
 ## Project Links
 
 - **GitHub Repository:** https://github.com/varunteja75/NEXUS-HR-Management-System
-- **Live Application:** https://nexus
+- **Live Application:** https://nexus-hr-management-system-1.onrender.com/
+
+## License
+
+Refer to the repository's license file for applicable usage and distribution terms.
